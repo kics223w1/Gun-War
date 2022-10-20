@@ -8,6 +8,7 @@ class DoublyLinkedList {
   private head: Node | undefined;
   private tail: Node | undefined;
   private length: number;
+
   constructor() {
     this.head = undefined;
     this.tail = undefined;
@@ -29,7 +30,7 @@ class DoublyLinkedList {
   public firstTimeInsert(data: any): void {
     this.length += 1;
     this.head = {
-      data: data,
+      data,
       next: undefined,
       prev: undefined,
     };
@@ -38,7 +39,7 @@ class DoublyLinkedList {
   public secondTimeInsert(data: any): void {
     this.length += 1;
     this.tail = {
-      data: data,
+      data,
       next: undefined,
       prev: this.head,
     };
@@ -57,13 +58,13 @@ class DoublyLinkedList {
       return;
     }
     this.length += 1;
-    const obj = {
+    const oldTail = this.tail;
+    this.tail = {
       next: undefined,
-      prev: this.tail,
-      data: data,
+      prev: oldTail,
+      data,
     };
-    this.tail.next = obj;
-    this.tail = obj;
+    oldTail.next = this.tail;
   }
 
   public replaceNode(oldData: any, newData: any): void {
@@ -110,8 +111,7 @@ class DoublyLinkedList {
       }
       return;
     }
-    const prev = node.prev;
-    const next = node.next;
+    const { prev, next } = node;
     if (prev) {
       prev.next = next;
     }
