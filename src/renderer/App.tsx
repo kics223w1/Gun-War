@@ -1,9 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
-import DoublyLinkedList from 'main/models/doubly-linked-list';
-import { useEffect, useState } from 'react';
-import Character from './models/character';
+
 const Hello = () => {
   return (
     <div>
@@ -17,7 +15,7 @@ const Hello = () => {
           target="_blank"
           rel="noreferrer"
         >
-          <button type="button" onClick={() => setS1(!s1)}>
+          <button type="button">
             <span role="img" aria-label="books">
               📚
             </span>
