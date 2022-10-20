@@ -1,16 +1,16 @@
 interface Node {
-  next: any;
-  prev: any;
-  data: any;
+  next?: Node;
+  prev?: Node;
+  data?: any;
 }
 
 class DoublyLinkedList {
-  private head: Node;
-  private tail: Node;
+  private head: Node | undefined;
+  private tail: Node | undefined;
   private length: number;
   constructor() {
-    this.head = { data: undefined, next: undefined, prev: undefined };
-    this.tail = { data: undefined, next: undefined, prev: undefined };
+    this.head = undefined;
+    this.tail = undefined;
     this.length = 0;
   }
 
@@ -30,7 +30,7 @@ class DoublyLinkedList {
     this.length += 1;
     this.head = {
       data: data,
-      next: data,
+      next: undefined,
       prev: undefined,
     };
   }
@@ -42,19 +42,20 @@ class DoublyLinkedList {
       next: undefined,
       prev: this.head,
     };
-    this.head.next = this.tail;
+    if (this.head) {
+      this.head.next = this.tail;
+    }
   }
 
   public insert(data: any): void {
-    if (!this.head.next) {
+    if (!this.head) {
       this.firstTimeInsert(data);
       return;
     }
-    if (!this.tail.prev) {
+    if (!this.tail) {
       this.secondTimeInsert(data);
       return;
     }
-    console.log('vao tiep: ', this.head, ' ', this.tail);
     this.length += 1;
     const obj = {
       next: undefined,
@@ -65,26 +66,69 @@ class DoublyLinkedList {
     this.tail = obj;
   }
 
-  public replace(data: any, node: any): void {
-    const prev = node.prev;
-    const next = node.next;
-    data.prev = prev;
-    data.next = next;
-    prev.next = data;
-    next.prev = data;
-    node = null;
+  public replaceNode(oldData: any, newData: any): void {
+    const node = this.findNode(oldData);
+    if (node) {
+      node.data = newData;
+    }
   }
 
-  public remove(node: any): void {
+  public removeNode(data: any): void {
+    const node = this.findNode(data);
+    if (node) {
+      this.remove(node);
+    }
+  }
+
+  private remove(node: Node): void {
+    if (this.length === 2) {
+      this.head = node;
+      this.tail = undefined;
+      this.length = 1;
+      return;
+    }
+    if (this.length === 1) {
+      this.head = undefined;
+      this.length = 0;
+      return;
+    }
+    if (node.data === this.head?.data) {
+      if (this.head) {
+        this.head = this.head.next;
+        if (this.head) {
+          this.head.prev = undefined;
+        }
+      }
+      return;
+    }
+    if (node.data === this.tail?.data) {
+      if (this.tail) {
+        this.tail = this.tail.prev;
+        if (this.tail) {
+          this.tail.next = undefined;
+        }
+      }
+      return;
+    }
     const prev = node.prev;
     const next = node.next;
-    prev.next = next;
-    next.prev = prev;
-    node = null;
+    if (prev) {
+      prev.next = next;
+    }
+    if (next) {
+      next.prev = prev;
+    }
+    this.length -= 1;
+    delete node.data;
+    delete node.next;
+    delete node.prev;
   }
 
   public getAllList(): any[] {
     let cur = this.head;
+    if (!cur) {
+      return [];
+    }
     const result = [];
     while (cur.next) {
       result.push(cur);
@@ -92,6 +136,23 @@ class DoublyLinkedList {
     }
     result.push(cur);
     return result;
+  }
+
+  private findNode(data: any): Node | undefined {
+    let cur = this.head;
+    if (!cur) {
+      return undefined;
+    }
+    while (cur.next) {
+      if (cur.data === data) {
+        return cur;
+      }
+      cur = cur.next;
+    }
+    if (cur.data === data) {
+      return cur;
+    }
+    return undefined;
   }
 }
 
