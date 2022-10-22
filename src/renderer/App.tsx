@@ -1,3 +1,4 @@
+import DoublyLinkedList from 'main/models/doubly-linked-list';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
@@ -23,7 +24,7 @@ const Hello = () => {
           </button>
         </a>
         <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
+          // href="https://github.com/sponsors/electron-react-boilerplate"
           target="_blank"
           rel="noreferrer"
         >
