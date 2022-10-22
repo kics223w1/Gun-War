@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -40,7 +40,15 @@ const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
-  require('electron-debug')();
+  try {
+    require('electron-debug')();
+    require('electron-reloader')(module, {
+      debug: true,
+      watchRenderer: true,
+    });
+  } catch (e: any) {
+    console.log('Error Reload: ', e);
+  }
 }
 
 const installExtensions = async () => {
